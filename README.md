@@ -125,6 +125,7 @@ chmod +x scripts/generate_selfsigned_cert.sh
 | Development | `docker compose --env-file .env.dev -f docker-compose.yml -f docker-compose.dev.yml up`         |
 | Staging     | `docker compose --env-file .env.staging -f docker-compose.yml -f docker-compose.staging.yml up` |
 | Production  | `docker compose --env-file .env.prod -f docker-compose.yml -f docker-compose.prod.yml up -d`    |
+
 This creates `nginx/ssl/branchloans.com.key` and `nginx/ssl/branchloans.com.crt` (backing up any existing files).
 
 
