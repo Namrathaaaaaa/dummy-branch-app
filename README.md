@@ -1,4 +1,4 @@
-# Flask Microloans API + Postgres (Docker)
+# Flask Microloans API + Postgres 
 
 Branch Loans API is a containerized Flask application providing loan management, health monitoring, and Prometheus-based observability.
 
