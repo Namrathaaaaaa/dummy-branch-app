@@ -48,21 +48,6 @@ See `.env.example` for env vars. By default:
 - GET `/api/loans` → list all loans
 - GET `/api/loans/:id` → get loan by id
 - POST `/api/loans` → create loan (status defaults to `pending`)
-
-Example create:
-
-```bash
-curl -X POST http://localhost:8000/api/loans \
-  -H 'Content-Type: application/json' \
-  -d '{
-    "borrower_id": "usr_india_999",
-    "amount": 12000.50,
-    "currency": "INR",
-    "term_months": 6,
-    "interest_rate_apr": 24.0
-  }'
-```
-
 - GET `/api/stats` → aggregate stats: totals, avg, grouped by status/currency.
 
 ## Development
@@ -71,11 +56,6 @@ curl -X POST http://localhost:8000/api/loans \
 - Flask app factory: `app/__init__.py`
 - Models: `app/models.py`
 - Migrations: `alembic/`
-
-## Notes
-
-- Amounts are validated server-side (0 < amount ≤ 50000).
-- No authentication for this prototype.
 
 ## How to Run the Application Locally
 
@@ -133,6 +113,41 @@ docker compose --env-file .env.prod \
   -f docker-compose.yml \
   -f docker-compose.prod.yml up -d --build
 ```
+
+## Nginx reverse proxy & SSL
+
+This project includes an Nginx config at `nginx/nginx.conf` and mounts the `nginx/ssl` directory into the container. To enable TLS locally you can generate a self-signed certificate and add a local DNS mapping.
+
+1. Generate a self-signed certificate (script included)
+
+```bash
+# make script executable once
+chmod +x scripts/generate_selfsigned_cert.sh
+./scripts/generate_selfsigned_cert.sh
+```
+
+This creates `nginx/ssl/branchloans.com.key` and `nginx/ssl/branchloans.com.crt` (backing up any existing files).
+
+2. Add a local DNS entry (edit `/etc/hosts`)
+
+Run as root (example):
+
+```bash
+sudo -- sh -c "echo '127.0.0.1 branchloans.com' >> /etc/hosts"
+```
+
+3. Start Nginx
+
+```bash
+docker compose up -d nginx
+```
+
+Notes
+
+- If you already have `nginx` service in `docker-compose.yml`, it will bind to port 443. Adjust ports if needed.
+- The included `nginx/nginx.conf` expects the SSL files at `/etc/nginx/ssl/branchloans.com.{crt,key}`.
+- Browsers will warn about self-signed certs; for local testing it's expected. Use proper CA-signed certs for production.
+
 
 🔧 Environment Variables Explained
 
@@ -221,6 +236,14 @@ Stored in GitHub → Repository → Settings → Secrets and variables → Actio
  └───────────────────────────────────────────────────────────────┘
 ```
 
+## Monitoring Dashboard (Grafana + Prometheus)
+
+Below is a demo mockup of the Grafana dashboard that visualizes Prometheus metrics scraped from the API. Replace this SVG with a real screenshot if you prefer — save screenshots to `docs/images/` and keep the same filename in the markdown below.
+
+![Grafana + Prometheus Dashboard](docs/images/grafana.png)
+
+Caption: Grafana dashboard mockup showing request rates, latency, DB connections, and loan distributions.
+
 🧠 Design Decisions
 
 ✔ Why Docker Compose for multi-environments?
@@ -300,3 +323,4 @@ DB unreachable → check:
 ```bash
 docker compose logs db
 ```
+
