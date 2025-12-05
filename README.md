@@ -58,7 +58,7 @@ See `.env.example` for env vars. By default:
 1️⃣ Clone Repository
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/Namrathaaaaaa/dummy-branch-app.git
 cd dummy-branch-app
 ```
 
