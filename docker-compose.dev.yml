@@ -1,0 +1,17 @@
+services:
+  api:
+    environment:
+      FLASK_ENV: development
+      LOG_LEVEL: debug
+    command: >
+      gunicorn -w 2 -b 0.0.0.0:8000 wsgi:app
+    volumes:
+      - ./app:/app/app
+    ports:
+      - "8000:8000"
+
+  db:
+    environment:
+      POSTGRES_DB: loans_dev
+      POSTGRES_USER: dev
+      POSTGRES_PASSWORD: devpass

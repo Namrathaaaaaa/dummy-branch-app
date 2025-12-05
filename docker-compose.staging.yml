@@ -1,0 +1,20 @@
+services:
+  api:
+    environment:
+      LOG_LEVEL: info 
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+
+  db:
+    environment:
+      POSTGRES_DB: loans_staging
+      POSTGRES_USER: staging
+      POSTGRES_PASSWORD: stagingpass
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M

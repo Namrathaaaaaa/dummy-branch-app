@@ -1,0 +1,28 @@
+services:
+  api:
+    environment:
+      LOG_LEVEL: warning
+      JSON_LOGS: "true"
+    command: >
+      gunicorn -w 4 -b 0.0.0.0:8000 wsgi:app
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 1G
+    healthcheck:
+      test: ["CMD", "curl", "-f" , "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+
+  db:
+    environment:
+      POSTGRES_DB: loans_prod
+      POSTGRES_USER: prod
+      POSTGRES_PASSWORD: prodpass
+    volumes:
+      - pgdata_prod:/var/lib/postgresql/data
+
+volumes:
+  pgdata_prod:
