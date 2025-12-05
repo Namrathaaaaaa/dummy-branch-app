@@ -1,3 +1,5 @@
 nginx/ssl/
 *.key
 *.crt
+.env.staging
+.env.prod

@@ -10,9 +10,9 @@ services:
 
   db:
     environment:
-      POSTGRES_DB: loans_staging
-      POSTGRES_USER: staging
-      POSTGRES_PASSWORD: stagingpass
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     deploy:
       resources:
         limits:

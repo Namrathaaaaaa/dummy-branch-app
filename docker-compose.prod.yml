@@ -18,9 +18,9 @@ services:
 
   db:
     environment:
-      POSTGRES_DB: loans_prod
-      POSTGRES_USER: prod
-      POSTGRES_PASSWORD: prodpass
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - pgdata_prod:/var/lib/postgresql/data
 
