@@ -7,6 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
+
   test:
     name: Run Tests
     runs-on: ubuntu-latest
@@ -52,6 +53,13 @@ jobs:
           TAG="${{ github.sha }}"
           docker build -t $IMAGE_NAME:$TAG .
 
+      - name: Tag latest
+        if: github.event_name == 'push'
+        run: |
+          IMAGE_NAME="ghcr.io/${{ secrets.GHCR_USERNAME }}/branch-loans-api"
+          TAG="${{ github.sha }}"
+          docker tag $IMAGE_NAME:$TAG $IMAGE_NAME:latest
+
       - name: Security Scan (Trivy)
         uses: aquasecurity/trivy-action@master
         with:
@@ -65,3 +73,4 @@ jobs:
           IMAGE_NAME="ghcr.io/${{ secrets.GHCR_USERNAME }}/branch-loans-api"
           TAG="${{ github.sha }}"
           docker push $IMAGE_NAME:$TAG
+          docker push $IMAGE_NAME:latest
