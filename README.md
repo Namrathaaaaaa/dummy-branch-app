@@ -14,10 +14,6 @@ It uses:
 - GitHub Actions (CI/CD) for automated builds, tests, security scans, and deployments
 - Prometheus + Grafana for monitoring and dashboards
 
-# Flask Microloans API + Postgres (Docker)
-
-Minimal REST API for microloans, built with Flask, SQLAlchemy, Alembic, and PostgreSQL (via Docker Compose).
-
 ## Quick start
 
 ```bash
