@@ -86,14 +86,6 @@ docker compose --env-file .env.dev \
   -f docker-compose.dev.yml up --build
 ```
 
-App available at:
-
-- API: http://localhost:8000
-- Health: http://localhost:8000/health
-- Metrics: http://localhost:8000/metrics
-- Grafana: http://localhost:3000
-- Prometheus: http://localhost:9090
-
 4️⃣ Run Staging Environment
 
 Mimics production with CPU/memory limits & structured logging.
@@ -149,6 +141,23 @@ Notes
 - Browsers will warn about self-signed certs; for local testing it's expected. Use proper CA-signed certs for production.
 
 
+App available at:
+
+- API: http://localhost:8000
+- Health: http://localhost:8000/health
+- Metrics: http://localhost:8000/metrics
+- Grafana: http://localhost:3000
+- Prometheus: http://localhost:9090
+
+🔄 Switching Between Environments
+
+| Environment | Command                                                                                         |
+| ----------- | ----------------------------------------------------------------------------------------------- |
+| Development | `docker compose --env-file .env.dev -f docker-compose.yml -f docker-compose.dev.yml up`         |
+| Staging     | `docker compose --env-file .env.staging -f docker-compose.yml -f docker-compose.staging.yml up` |
+| Production  | `docker compose --env-file .env.prod -f docker-compose.yml -f docker-compose.prod.yml up -d`    |
+
+
 🔧 Environment Variables Explained
 
 | Variable            | Description                 |
@@ -162,13 +171,6 @@ Notes
 | `DATABASE_URL`      | SQLAlchemy DSN              |
 | `FLASK_ENV`         | development / production    |
 
-🔄 Switching Between Environments
-
-| Environment | Command                                                                                         |
-| ----------- | ----------------------------------------------------------------------------------------------- |
-| Development | `docker compose --env-file .env.dev -f docker-compose.yml -f docker-compose.dev.yml up`         |
-| Staging     | `docker compose --env-file .env.staging -f docker-compose.yml -f docker-compose.staging.yml up` |
-| Production  | `docker compose --env-file .env.prod -f docker-compose.yml -f docker-compose.prod.yml up -d`    |
 
 🛠 CI/CD Pipeline (GitHub Actions)
 
