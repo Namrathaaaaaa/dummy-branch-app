@@ -21,15 +21,13 @@ jobs:
           python-version: "3.11"
 
       - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
+        run: pip install -r requirements.txt
 
       - name: Run tests
-        run: |
-          pytest || echo "No tests available" 
+        run: pytest || echo "No tests available"
 
   build:
-    name: Build Docker Image
+    name: Build & Push Docker Image
     runs-on: ubuntu-latest
     needs: test
 
@@ -40,31 +38,30 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Login to Docker Registry
+      - name: Login to GHCR
         if: github.event_name == 'push'
         uses: docker/login-action@v3
         with:
-          registry: ${{ secrets.DOCKER_REGISTRY }}
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          registry: ${{ secrets.GHCR_REGISTRY }}
+          username: ${{ secrets.GHCR_USERNAME }}
+          password: ${{ secrets.GHCR_TOKEN }}
 
       - name: Build Docker image
-        id: build
         run: |
-          IMAGE_NAME="${{ secrets.DOCKER_REGISTRY }}/${{ secrets.DOCKER_USERNAME }}/branch-loans-api"
+          IMAGE_NAME="ghcr.io/${{ secrets.GHCR_USERNAME }}/branch-loans-api"
           TAG="${{ github.sha }}"
           docker build -t $IMAGE_NAME:$TAG .
 
       - name: Security Scan (Trivy)
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: ${{ secrets.DOCKER_REGISTRY }}/${{ secrets.DOCKER_USERNAME }}/branch-loans-api:${{ github.sha }}
+          image-ref: ghcr.io/${{ secrets.GHCR_USERNAME }}/branch-loans-api:${{ github.sha }}
           severity: CRITICAL
           exit-code: 1 
 
       - name: Push Docker image
         if: github.event_name == 'push'
         run: |
-          IMAGE_NAME="${{ secrets.DOCKER_REGISTRY }}/${{ secrets.DOCKER_USERNAME }}/branch-loans-api"
+          IMAGE_NAME="ghcr.io/${{ secrets.GHCR_USERNAME }}/branch-loans-api"
           TAG="${{ github.sha }}"
           docker push $IMAGE_NAME:$TAG
